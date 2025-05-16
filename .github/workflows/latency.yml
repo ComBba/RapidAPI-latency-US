@@ -11,10 +11,8 @@ jobs:
           RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
         run: |
           URL='https://instagram-social-api.p.rapidapi.com/v1/search_posts?search_query=%EB%A6%BD%EB%B0%A4'
-          for i in {1..5}; do
-            curl -s -o /dev/null \
-                 -H "x-rapidapi-host: instagram-social-api.p.rapidapi.com" \
-                 -H "x-rapidapi-key: $RAPIDAPI_KEY" \
-                 -w 'run='$i' total=%{time_total}s\n' \
-                 "$URL"
-          done
+          curl -s -D - \
+               -H "x-rapidapi-host: instagram-social-api.p.rapidapi.com" \
+               -H "x-rapidapi-key: $RAPIDAPI_KEY" \
+               -w '\n---- timing ----\nhttp=%{http_code} dns=%{time_namelookup}s connect=%{time_connect}s ttfb=%{time_starttransfer}s total=%{time_total}s\n' \
+               "$URL" | head -n 40
